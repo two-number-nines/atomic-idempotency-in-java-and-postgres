@@ -35,4 +35,10 @@ public class Account {
     public void deposit(int amount) {
         throw new UnsupportedOperationException("Not implemented yet");
     }
+
+    @Override
+    public String toString() {
+        return "Account [uniqueId=" + uniqueId + ", balance=" + balance + "]";
+    }
+    
 }

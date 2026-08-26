@@ -1,27 +1,41 @@
 package com.mycompany.app.repository;
 
 import com.mycompany.app.domain.Account;
+import com.mycompany.app.config.DatabaseConfig;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class AccountRepository {
 
-    private Account[] accounts;
+    private final DatabaseConfig databaseConfig;
 
-    public AccountRepository() {
-        this.accounts = new Account[2];
-        Account accountA = new Account();
-        Account accountB = new Account();
-
-        this.accounts[0] = accountA;
-        this.accounts[1] = accountB;
-
-        // this is a starting balance but shouldn't be part of a repo
-        accountA.setBalance(100);
-        accountB.setBalance(200);
-        accountA.setUniqueId(0);
-        accountB.setUniqueId(1);
+    public AccountRepository(DatabaseConfig databaseConfig) {
+        this.databaseConfig = databaseConfig;
     }
-    // super dumb implementation to get an account by it's index, which is set as their unique id for now
+
     public Account getAccountById(int uniqueId) {
-        return this.accounts[uniqueId];
+        String sql = "SELECT * FROM accounts WHERE id = ?";
+        try (
+            Connection conn = databaseConfig.getConnection();
+            PreparedStatement st = conn.prepareStatement(sql)
+        ) {
+        st.setInt(1, uniqueId);
+        try (ResultSet rs = st.executeQuery()) {
+            if (rs.next()) {
+                Account account = new Account();
+                account.setUniqueId(rs.getInt("id"));
+                account.setName(rs.getString("name"));
+                account.setBalance(rs.getInt("balance"));
+                return account;
+            }
+        }
+            return null;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Couldn't fetch account from database", e);
+        }
     }
 }

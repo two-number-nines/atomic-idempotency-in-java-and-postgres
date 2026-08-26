@@ -2,24 +2,34 @@ package com.mycompany.app.domain;
 
 public class Account {
     private int uniqueId = 0;
+    private String name = "";
     private int balance = 0;
 
+
+    public int getUniqueId() {
+        return this.uniqueId;
+    }
+
+    public String getName() {
+        return this.name;
+    }
 
     public int getBalance() {
         return this.balance;
     }
 
-    public int getUniqueId() {
-        return this.uniqueId;
+    public void setUniqueId(int uniqueId) {
+        this.uniqueId = uniqueId;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setBalance(int balance) {
         this.balance = balance;
     }
 
-    public void setUniqueId(int uniqueId) {
-        this.uniqueId = uniqueId;
-    }
     public void transfer(Account destination, int amount) {
         if (amount <= 0) {
             throw new IllegalArgumentException("Amount should be more than 0");
@@ -38,7 +48,7 @@ public class Account {
 
     @Override
     public String toString() {
-        return "Account [uniqueId=" + uniqueId + ", balance=" + balance + "]";
+        return "Account [uniqueId=" + uniqueId + ", name=" + name + ", balance=" + balance + "]";
     }
     
 }

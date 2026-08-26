@@ -6,7 +6,6 @@ import java.net.URI;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.mycompany.app.domain.Account;
 import com.mycompany.app.repository.AccountRepository;
 
 public class AccountHandler implements HttpHandler {

@@ -21,6 +21,13 @@ public class AccountHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         try {
 
+            String method = exchange.getRequestMethod();
+            if (!"GET".equals(method)) {
+                exchange.getResponseHeaders().set("Allow", "GET");
+                exchange.sendResponseHeaders(405, -1);
+                return;
+            }
+
             URI uri = exchange.getRequestURI();
 
             String[] urlPathStrings = uri.getPath().split("/");
@@ -30,12 +37,11 @@ public class AccountHandler implements HttpHandler {
             String account = accountRepo.getAccountById(requestedAccountId).toString();
             byte[] responseBytes = account.getBytes();
             exchange.sendResponseHeaders(200, responseBytes.length);
-            
+
             OutputStream outputStream = exchange.getResponseBody();
             outputStream.write(responseBytes);
             outputStream.close();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             exchange.sendResponseHeaders(500, 0);
             exchange.close();

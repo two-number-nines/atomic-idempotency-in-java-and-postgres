@@ -1,4 +1,5 @@
 package com.mycompany.app.handler;
+
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -12,11 +13,18 @@ public class HomeHandler implements HttpHandler {
         String home = "Hello home";
         byte[] responseBytes = home.getBytes();
 
+        String method = exchange.getRequestMethod();
+        if (!"GET".equals(method)) {
+            exchange.getResponseHeaders().set("Allow", "GET");
+            exchange.sendResponseHeaders(405, -1);
+            return;
+        }
+
         exchange.sendResponseHeaders(200, responseBytes.length);
 
         OutputStream outputStream = exchange.getResponseBody();
         outputStream.write(responseBytes);
         outputStream.close();
     }
-    
+
 }

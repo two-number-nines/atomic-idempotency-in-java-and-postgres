@@ -5,6 +5,7 @@ import java.net.InetSocketAddress;
 import com.mycompany.app.config.DatabaseConfig;
 import com.mycompany.app.handler.AccountHandler;
 import com.mycompany.app.handler.HomeHandler;
+import com.mycompany.app.handler.TransferHandler;
 import com.mycompany.app.repository.AccountRepository;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
@@ -17,6 +18,7 @@ public class App {
         HttpServer server = HttpServer.create(new InetSocketAddress(8008), 0);
         HttpContext context = server.createContext("/");
         HttpContext accountContext = server.createContext("/account");
+        HttpContext transferContext = server.createContext("/transfer");
 
         // Database
         DatabaseConfig databaseConfig = new DatabaseConfig();
@@ -27,9 +29,14 @@ public class App {
         // Handlers
         AccountHandler accountHandler = new AccountHandler(accountRepository);
         HomeHandler homeHandler = new HomeHandler();
+        TransferHandler TransferHandler = new TransferHandler();
 
         accountContext.setHandler(accountHandler);
+        transferContext.setHandler(TransferHandler);
+
+        // home
         context.setHandler(homeHandler);
+
 
         server.start();
     }
